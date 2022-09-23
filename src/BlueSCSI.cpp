@@ -355,8 +355,8 @@ void setup()
   // clear and initialize default inquiry blocks
   // default SCSI HDD
   memset(&default_hdd, 0, sizeof(default_hdd));
-  default_hdd.ansi_version = 1;
-  default_hdd.response_format = 1;
+  default_hdd.ansi_version = 2;
+  default_hdd.response_format = 2;
   default_hdd.additional_length = 31;
   memcpy(&default_hdd.vendor, "QUANTUM", 7);
   memcpy(&default_hdd.product, "BLUESCSI F1", 11);
@@ -366,8 +366,8 @@ void setup()
   memset(&default_optical, 0, sizeof(default_optical));
   default_optical.peripheral_device_type = 5;
   default_optical.rmb = 1;
-  default_optical.ansi_version = 1;
-  default_optical.response_format = 1;
+  default_optical.ansi_version = 2;
+  default_optical.response_format = 2;
   default_optical.additional_length = 42;
   default_optical.sync = 1;
   memcpy(&default_optical.vendor, "BLUESCSI", 8);
@@ -635,7 +635,17 @@ void findDriveImages(FsFile root) {
 
           readSCSIDeviceConfig(dev);
         }
-      }      
+      }
+      // HDN(.*).hd1 is a SCSI-1 device.
+      if (file_name_length > 6 &&
+         tolower(name[file_name_length - 4]) == '.' &&
+         tolower(name[file_name_length - 3]) == 'h' &&
+         tolower(name[file_name_length - 2]) == 'd' &&
+         tolower(name[file_name_length - 1]) == '1')
+      {
+        dev->inquiry_block->ansi_version = 1;
+        dev->inquiry_block->response_format = 0;
+      }
     }
     LOG_FILE.sync();
   }

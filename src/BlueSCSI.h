@@ -279,7 +279,7 @@ struct SCSI_INQUIRY_DATA
     byte ansi_version:3;
     byte always_zero_byte3:5;
     // byte 3
-    byte response_format:4;
+    byte response_format:4; // 0 = SCSI1, 1 = Before SCSI2 was finalized, 2 = SCSI2
     byte reserved_byte4:2;
     byte tiop:1;
     byte always_zero_byte4:1;
